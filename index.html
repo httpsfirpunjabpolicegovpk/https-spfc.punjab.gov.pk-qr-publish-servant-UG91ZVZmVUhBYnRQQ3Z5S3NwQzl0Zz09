@@ -1,0 +1,87 @@
+<div class="container-fluid" style="margin-top:-55px;">
+    <div class="page-section">
+        <div class="row">
+            <div class="panel panel-default col-md-12 text-center" style="min-height: 400px;">
+                <div class="panel-heading" style="min-height:55px;">
+                    <h2 class="panel-title text-center">Document Verification</h2>
+                </div>
+                <div class="panel-body list-group">
+                    <form method="POST" name="frm_submit" id="frm_submit" enctype="multipart/form-data">
+                        <br style="clear: both;" />
+                        
+                        <input type="hidden" name="type" value="servant">
+                        <input type="hidden" name="code" value="UG91ZVZmVUhBYnRQQ3Z5S3NwQzl0Zz09">
+
+                        <div class="col-md-12">
+                            <div class="form-group text-left">
+                                <label for="cnic"> CNIC Number (required)</label>
+                                <input type="text" name="cnic" placeholder="Enter CNIC No. e.g. 31202-6789890-3" id="cnic" class="cnic2 form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 captcha-container">
+                            <div class="form-group text-left">
+                                <label>Security Question (required)</label>
+                                <div class="captcha-question" id="captcha-ques" style="font-size: 20px; font-weight: bold; margin-bottom: 10px; color: #333;">
+                                    <!-- Question will appear here -->
+                                </div>
+                                <div class="captcha-input-container" style="display: flex; gap: 10px;">
+                                    <input type="number" id="captcha_ans" class="form-control" placeholder="Answer" required style="width: 150px;">
+                                    <button type="button" class="btn btn-info" onclick="refreshCaptcha()">
+                                        Refresh
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12" style="margin-top: 20px;">
+                            <button type="submit" class="btn btn-primary" style="background-color: #4E62DA; width: 150px; font-weight: bold; height: 45px;">SUBMIT</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="panel-footer">
+                    <p>© Copyright 2026 PITB</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts Area -->
+<script>
+    let captchaResult;
+
+    // 1. Function to change captcha numbers
+    function refreshCaptcha() {
+        let num1 = Math.floor(Math.random() * 15) + 1;
+        let num2 = Math.floor(Math.random() * 10) + 1;
+        captchaResult = num1 + num2;
+        
+        // Update the UI
+        document.getElementById('captcha-ques').innerText = num1 + " + " + num2 + " = ?";
+        document.getElementById('captcha_ans').value = ""; // Clear box
+    }
+
+    $(document).ready(function(){
+        // 2. Apply CNIC format
+        $('.cnic2').mask('00000-0000000-0');
+        
+        // 3. Start first captcha
+        refreshCaptcha();
+
+        // 4. Form Submit Validation
+        $('#frm_submit').on('submit', function(e) {
+            let userAnswer = $('#captcha_ans').val();
+            
+            if (parseInt(userAnswer) !== captchaResult) {
+                e.preventDefault(); 
+                alert("Invalid Captcha! Please enter the correct sum.");
+                refreshCaptcha(); // Change numbers on fail
+            } else {
+                alert("Success! Form is being submitted.");
+            }
+        });
+    });
+</script>
+</body>
+</html>
